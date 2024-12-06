@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, Overlay, OverlayBackdrop, OverlayCenter, Text } from 'folds';
 import FocusTrap from 'focus-trap-react';
-import { UserEvent, UserEventHandlerMap } from 'matrix-js-sdk';
 import { SidebarItem, SidebarItemTooltip, SidebarAvatar } from '../../../components/sidebar';
 import { UserAvatar } from '../../../components/user-avatar';
 import { useMatrixClient } from '../../../hooks/useMatrixClient';
@@ -10,54 +9,7 @@ import { nameInitials } from '../../../utils/common';
 import { useMediaAuthentication } from '../../../hooks/useMediaAuthentication';
 import { Settings } from '../../../features/settings';
 import { stopPropagation } from '../../../utils/keyboard';
-
-type UserProfile = {
-  avatarUrl?: string;
-  displayName?: string;
-};
-const useUserProfile = (userId: string): UserProfile => {
-  const mx = useMatrixClient();
-
-  const [profile, setProfile] = useState<UserProfile>(() => {
-    const user = mx.getUser(userId);
-    return {
-      avatarUrl: user?.avatarUrl,
-      displayName: user?.displayName,
-    };
-  });
-
-  useEffect(() => {
-    const user = mx.getUser(userId);
-    const onAvatarChange: UserEventHandlerMap[UserEvent.AvatarUrl] = (event, myUser) => {
-      setProfile((cp) => ({
-        ...cp,
-        avatarUrl: myUser.avatarUrl,
-      }));
-    };
-    const onDisplayNameChange: UserEventHandlerMap[UserEvent.DisplayName] = (event, myUser) => {
-      setProfile((cp) => ({
-        ...cp,
-        displayName: myUser.displayName,
-      }));
-    };
-
-    mx.getProfileInfo(userId).then((info) =>
-      setProfile({
-        avatarUrl: info.avatar_url,
-        displayName: info.displayname,
-      })
-    );
-
-    user?.on(UserEvent.AvatarUrl, onAvatarChange);
-    user?.on(UserEvent.DisplayName, onDisplayNameChange);
-    return () => {
-      user?.removeListener(UserEvent.AvatarUrl, onAvatarChange);
-      user?.removeListener(UserEvent.DisplayName, onDisplayNameChange);
-    };
-  }, [mx, userId]);
-
-  return profile;
-};
+import { useUserProfile } from '../../../hooks/useUserProfile';
 
 export function SettingsTab() {
   const mx = useMatrixClient();

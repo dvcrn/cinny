@@ -1,6 +1,5 @@
 import React, {
   ChangeEventHandler,
-  CSSProperties,
   KeyboardEventHandler,
   MouseEventHandler,
   useState,
@@ -45,10 +44,7 @@ import {
 import { stopPropagation } from '../../utils/keyboard';
 import { useMessageLayoutItems } from '../../hooks/useMessageLayout';
 import { useMessageSpacingItems } from '../../hooks/useMessageSpacing';
-
-const SequenceCardStyle: CSSProperties = {
-  padding: config.space.S300,
-};
+import { SequenceCardStyle } from './styles.css';
 
 type ThemeSelectorProps = {
   themeNames: Record<string, string>;
@@ -286,7 +282,7 @@ function PageZoomInput() {
 
   return (
     <Input
-      style={{ width: toRem(150) }}
+      style={{ width: toRem(100) }}
       variant={pageZoom === parseInt(currentZoom, 10) ? 'Secondary' : 'Success'}
       size="300"
       radii="300"
@@ -309,7 +305,12 @@ function Appearance() {
   return (
     <Box direction="Column" gap="100">
       <Text size="L400">Appearance</Text>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column" gap="400">
+      <SequenceCard
+        className={SequenceCardStyle}
+        variant="SurfaceVariant"
+        direction="Column"
+        gap="400"
+      >
         <SettingTile
           title="System Theme"
           description="Choose between light and dark theme based on system preference."
@@ -318,7 +319,7 @@ function Appearance() {
         {systemTheme && <SystemThemePreferences />}
       </SequenceCard>
 
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Theme"
           description="Theme to use when system theme is not enabled."
@@ -326,14 +327,14 @@ function Appearance() {
         />
       </SequenceCard>
 
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Twitter Emoji"
           after={<Switch variant="Primary" value={twitterEmoji} onChange={setTwitterEmoji} />}
         />
       </SequenceCard>
 
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile title="Page Zoom" after={<PageZoomInput />} />
       </SequenceCard>
     </Box>
@@ -347,7 +348,7 @@ function Editor() {
   return (
     <Box direction="Column" gap="100">
       <Text size="L400">Editor</Text>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="ENTER for Newline"
           description={`Use ${
@@ -356,7 +357,7 @@ function Editor() {
           after={<Switch variant="Primary" value={enterForNewline} onChange={setEnterForNewline} />}
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Markdown Formatting"
           after={<Switch variant="Primary" value={isMarkdown} onChange={setIsMarkdown} />}
@@ -521,13 +522,13 @@ function Messages() {
   return (
     <Box direction="Column" gap="100">
       <Text size="L400">Messages</Text>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile title="Message Layout" after={<SelectMessageLayout />} />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile title="Message Spacing" after={<SelectMessageSpacing />} />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Hide Membership Change"
           after={
@@ -539,7 +540,7 @@ function Messages() {
           }
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Hide Profile Change"
           after={
@@ -551,25 +552,25 @@ function Messages() {
           }
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Disable Media Auto Load"
           after={<Switch variant="Primary" value={mediaAutoLoad} onChange={setMediaAutoLoad} />}
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Url Preview"
           after={<Switch variant="Primary" value={urlPreview} onChange={setUrlPreview} />}
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Url Preview in Encrypted Room"
           after={<Switch variant="Primary" value={encUrlPreview} onChange={setEncUrlPreview} />}
         />
       </SequenceCard>
-      <SequenceCard style={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
+      <SequenceCard className={SequenceCardStyle} variant="SurfaceVariant" direction="Column">
         <SettingTile
           title="Show Hidden Events"
           after={

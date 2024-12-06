@@ -1,8 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { Box, config, Icon, IconButton, Icons, IconSrc, MenuItem, Text } from 'folds';
+import { Avatar, Box, config, Icon, IconButton, Icons, IconSrc, MenuItem, Text } from 'folds';
 import { General } from './General';
 import { PageNav, PageNavContent, PageNavHeader, PageRoot } from '../../components/page';
 import { ScreenSize, useScreenSizeContext } from '../../hooks/useScreenSize';
+import { Account } from './Account';
+import { useUserProfile } from '../../hooks/useUserProfile';
+import { useMatrixClient } from '../../hooks/useMatrixClient';
+import { getMxIdLocalPart, mxcUrlToHttp } from '../../utils/matrix';
+import { useMediaAuthentication } from '../../hooks/useMediaAuthentication';
+import { UserAvatar } from '../../components/user-avatar';
+import { nameInitials } from '../../utils/common';
 
 enum SettingsPages {
   GeneralPage,
@@ -72,6 +79,15 @@ type SettingsProps = {
   requestClose: () => void;
 };
 export function Settings({ requestClose }: SettingsProps) {
+  const mx = useMatrixClient();
+  const useAuthentication = useMediaAuthentication();
+  const userId = mx.getUserId()!;
+  const profile = useUserProfile(userId);
+  const displayName = profile.displayName ?? getMxIdLocalPart(userId) ?? userId;
+  const avatarUrl = profile.avatarUrl
+    ? mxcUrlToHttp(mx, profile.avatarUrl, useAuthentication, 96, 96, 'crop') ?? undefined
+    : undefined;
+
   const screenSize = useScreenSizeContext();
   const [activePage, setActivePage] = useState<SettingsPages | undefined>(
     screenSize === ScreenSize.Mobile ? undefined : SettingsPages.GeneralPage
@@ -92,8 +108,17 @@ export function Settings({ requestClose }: SettingsProps) {
         screenSize === ScreenSize.Mobile && activePage !== undefined ? undefined : (
           <PageNav size="300">
             <PageNavHeader outlined={false}>
-              <Box grow="Yes">
-                <Text size="H4">Settings</Text>
+              <Box grow="Yes" gap="200">
+                <Avatar size="200" radii="300">
+                  <UserAvatar
+                    userId={userId}
+                    src={avatarUrl}
+                    renderFallback={() => <Text size="H6">{nameInitials(displayName)}</Text>}
+                  />
+                </Avatar>
+                <Text size="H4" truncate>
+                  Settings
+                </Text>
               </Box>
               <Box shrink="No">
                 {screenSize === ScreenSize.Mobile && (
@@ -132,6 +157,9 @@ export function Settings({ requestClose }: SettingsProps) {
     >
       {activePage === SettingsPages.GeneralPage && (
         <General requestClose={handlePageRequestClose} />
+      )}
+      {activePage === SettingsPages.AccountPage && (
+        <Account requestClose={handlePageRequestClose} />
       )}
     </PageRoot>
   );
