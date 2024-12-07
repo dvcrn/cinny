@@ -132,6 +132,7 @@ export function Settings({ requestClose }: SettingsProps) {
               <div>
                 {menuItems.map((item) => (
                   <MenuItem
+                    key={item.name}
                     variant="Background"
                     radii="400"
                     aria-pressed={activePage === item.page}
