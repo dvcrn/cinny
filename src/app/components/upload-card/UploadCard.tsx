@@ -12,8 +12,8 @@ type UploadCardProps = {
 };
 
 export const UploadCard = forwardRef<HTMLDivElement, UploadCardProps & css.UploadCardVariant>(
-  ({ before, after, children, bottom, radii }, ref) => (
-    <Box className={css.UploadCard({ radii })} direction="Column" gap="200" ref={ref}>
+  ({ before, after, children, bottom, radii, outlined }, ref) => (
+    <Box className={css.UploadCard({ radii, outlined })} direction="Column" gap="200" ref={ref}>
       <Box alignItems="Center" gap="200">
         {before}
         <Box alignItems="Center" grow="Yes" gap="200">
