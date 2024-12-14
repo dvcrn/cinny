@@ -17,6 +17,11 @@ export const UploadCard = recipe({
         borderWidth: config.borderWidth.B300,
       },
     },
+    compact: {
+      true: {
+        padding: config.space.S100,
+      },
+    },
   },
   defaultVariants: {
     radii: '400',
