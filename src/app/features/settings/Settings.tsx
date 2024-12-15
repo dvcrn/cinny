@@ -10,6 +10,7 @@ import { getMxIdLocalPart, mxcUrlToHttp } from '../../utils/matrix';
 import { useMediaAuthentication } from '../../hooks/useMediaAuthentication';
 import { UserAvatar } from '../../components/user-avatar';
 import { nameInitials } from '../../utils/common';
+import { Notifications } from './notifications';
 
 enum SettingsPages {
   GeneralPage,
@@ -161,6 +162,9 @@ export function Settings({ requestClose }: SettingsProps) {
       )}
       {activePage === SettingsPages.AccountPage && (
         <Account requestClose={handlePageRequestClose} />
+      )}
+      {activePage === SettingsPages.NotificationPage && (
+        <Notifications requestClose={handlePageRequestClose} />
       )}
     </PageRoot>
   );
