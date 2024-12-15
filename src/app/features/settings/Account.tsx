@@ -237,6 +237,9 @@ function ProfileAvatar({ profile, userId }: ProfileProps) {
 
 function ProfileDisplayName({ profile, userId }: ProfileProps) {
   const mx = useMatrixClient();
+  const capabilities = useCapabilities();
+  const disableSetDisplayname = capabilities['m.set_displayname']?.enabled === false;
+
   const defaultDisplayName = profile.displayName ?? getMxIdLocalPart(userId) ?? userId;
   const [displayName, setDisplayName] = useState(defaultDisplayName);
 
@@ -276,7 +279,12 @@ function ProfileDisplayName({ profile, userId }: ProfileProps) {
       }
     >
       <Box direction="Column" grow="Yes" gap="100">
-        <Box as="form" onSubmit={handleSubmit} gap="200" aria-disabled={changingDisplayName}>
+        <Box
+          as="form"
+          onSubmit={handleSubmit}
+          gap="200"
+          aria-disabled={changingDisplayName || disableSetDisplayname}
+        >
           <Box grow="Yes" direction="Column">
             <Input
               required
@@ -286,7 +294,7 @@ function ProfileDisplayName({ profile, userId }: ProfileProps) {
               variant="Secondary"
               radii="300"
               style={{ paddingRight: config.space.S200 }}
-              readOnly={changingDisplayName}
+              readOnly={changingDisplayName || disableSetDisplayname}
               after={
                 hasChanges &&
                 !changingDisplayName && (
