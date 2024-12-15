@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Box,
   Text,
@@ -17,6 +24,7 @@ import {
   Dialog,
   Header,
   config,
+  Spinner,
 } from 'folds';
 import FocusTrap from 'focus-trap-react';
 import { Page, PageContent, PageHeader } from '../../components/page';
@@ -66,11 +74,11 @@ function MatrixId() {
   );
 }
 
-type ProfileAvatarProps = {
+type ProfileProps = {
   profile: UserProfile;
   userId: string;
 };
-function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
+function ProfileAvatar({ profile, userId }: ProfileProps) {
   const mx = useMatrixClient();
   const useAuthentication = useMediaAuthentication();
   const capabilities = useCapabilities();
@@ -116,7 +124,7 @@ function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
           Avatar
         </Text>
       }
-      before={
+      after={
         <Avatar size="500" radii="300">
           <UserAvatar
             userId={userId}
@@ -227,11 +235,96 @@ function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
   );
 }
 
+function ProfileDisplayName({ profile, userId }: ProfileProps) {
+  const mx = useMatrixClient();
+  const defaultDisplayName = profile.displayName ?? getMxIdLocalPart(userId) ?? userId;
+  const [displayName, setDisplayName] = useState(defaultDisplayName);
+
+  const [changeState, changeDisplayName] = useAsyncCallback(
+    useCallback((name: string) => mx.setDisplayName(name), [mx])
+  );
+  const changingDisplayName = changeState.status === AsyncStatus.Loading;
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (evt) => {
+    const name = evt.currentTarget.value;
+    setDisplayName(name);
+  };
+
+  const handleReset = () => {
+    setDisplayName(defaultDisplayName);
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
+    evt.preventDefault();
+    if (changingDisplayName) return;
+
+    const target = evt.target as HTMLFormElement | undefined;
+    const displayNameInput = target?.displayNameInput as HTMLInputElement | undefined;
+    const name = displayNameInput?.value;
+    if (!name) return;
+
+    changeDisplayName(name);
+  };
+
+  const hasChanges = displayName !== defaultDisplayName;
+  return (
+    <SettingTile
+      title={
+        <Text as="span" size="L400">
+          Display Name
+        </Text>
+      }
+    >
+      <Box direction="Column" grow="Yes" gap="100">
+        <Box as="form" onSubmit={handleSubmit} gap="200" aria-disabled={changingDisplayName}>
+          <Box grow="Yes" direction="Column">
+            <Input
+              required
+              name="displayNameInput"
+              value={displayName}
+              onChange={handleChange}
+              variant="Secondary"
+              radii="300"
+              style={{ paddingRight: config.space.S200 }}
+              readOnly={changingDisplayName}
+              after={
+                hasChanges &&
+                !changingDisplayName && (
+                  <IconButton
+                    type="reset"
+                    onClick={handleReset}
+                    size="300"
+                    radii="300"
+                    variant="Secondary"
+                  >
+                    <Icon src={Icons.Cross} size="100" />
+                  </IconButton>
+                )
+              }
+            />
+          </Box>
+          <Button
+            size="400"
+            variant={hasChanges ? 'Success' : 'Secondary'}
+            fill={hasChanges ? 'Solid' : 'Soft'}
+            outlined
+            radii="300"
+            disabled={!hasChanges || changingDisplayName}
+            type="submit"
+          >
+            {changingDisplayName && <Spinner variant="Success" fill="Solid" size="300" />}
+            <Text size="B400">Save</Text>
+          </Button>
+        </Box>
+      </Box>
+    </SettingTile>
+  );
+}
+
 function Profile() {
   const mx = useMatrixClient();
   const userId = mx.getUserId()!;
   const profile = useUserProfile(userId);
-  const defaultDisplayName = profile.displayName ?? getMxIdLocalPart(userId) ?? userId;
 
   return (
     <Box direction="Column" gap="100">
@@ -243,25 +336,7 @@ function Profile() {
         gap="400"
       >
         <ProfileAvatar userId={userId} profile={profile} />
-        <SettingTile
-          title={
-            <Text as="span" size="L400">
-              Display Name
-            </Text>
-          }
-        >
-          <Box direction="Column" grow="Yes" gap="100">
-            <Box gap="200">
-              <Box grow="Yes" direction="Column">
-                <Input defaultValue={defaultDisplayName} variant="Secondary" radii="300" />
-              </Box>
-
-              <Button size="400" variant="Secondary" fill="Soft" outlined radii="300">
-                <Text size="B400">Save</Text>
-              </Button>
-            </Box>
-          </Box>
-        </SettingTile>
+        <ProfileDisplayName userId={userId} profile={profile} />
       </SequenceCard>
     </Box>
   );
