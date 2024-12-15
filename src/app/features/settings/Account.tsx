@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Text,
@@ -14,6 +14,9 @@ import {
   OverlayBackdrop,
   OverlayCenter,
   Modal,
+  Dialog,
+  Header,
+  config,
 } from 'folds';
 import FocusTrap from 'focus-trap-react';
 import { Page, PageContent, PageHeader } from '../../components/page';
@@ -33,6 +36,9 @@ import { useObjectURL } from '../../hooks/useObjectURL';
 import { stopPropagation } from '../../utils/keyboard';
 import { ImageEditor } from '../../components/image-editor';
 import { ModalWide } from '../../styles/Modal.css';
+import { createUploadAtom, UploadSuccess } from '../../state/upload';
+import { CompactUploadCardRenderer } from '../../components/upload-card';
+import { useCapabilities } from '../../hooks/useCapabilities';
 
 function MatrixId() {
   const mx = useMatrixClient();
@@ -67,6 +73,9 @@ type ProfileAvatarProps = {
 function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
   const mx = useMatrixClient();
   const useAuthentication = useMediaAuthentication();
+  const capabilities = useCapabilities();
+  const [alertRemove, setAlertRemove] = useState(false);
+  const disableSetAvatar = capabilities['m.set_avatar_url']?.enabled === false;
 
   const defaultDisplayName = profile.displayName ?? getMxIdLocalPart(userId) ?? userId;
   const avatarUrl = profile.avatarUrl
@@ -75,12 +84,30 @@ function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
 
   const [imageFile, setImageFile] = useState<File>();
   const imageFileURL = useObjectURL(imageFile);
+  const uploadAtom = useMemo(() => {
+    if (imageFile) return createUploadAtom(imageFile);
+    return undefined;
+  }, [imageFile]);
 
   const pickFile = useFilePicker(setImageFile, false);
 
-  const handleImageCropperClose = useCallback(() => {
+  const handleRemoveUpload = useCallback(() => {
     setImageFile(undefined);
   }, []);
+
+  const handleUploaded = useCallback(
+    (upload: UploadSuccess) => {
+      const { mxc } = upload;
+      mx.setAvatarUrl(mxc);
+      handleRemoveUpload();
+    },
+    [mx, handleRemoveUpload]
+  );
+
+  const handleRemoveAvatar = () => {
+    mx.setAvatarUrl('');
+    setAlertRemove(false);
+  };
 
   return (
     <SettingTile
@@ -99,46 +126,103 @@ function ProfileAvatar({ profile, userId }: ProfileAvatarProps) {
         </Avatar>
       }
     >
-      <Box gap="200">
-        <Button
-          onClick={() => pickFile('image/*')}
-          size="300"
-          variant="Secondary"
-          fill="Soft"
-          outlined
-          radii="300"
-        >
-          <Text size="B300">Upload</Text>
-        </Button>
-        {avatarUrl && (
-          <Button size="300" variant="Critical" fill="None" radii="300">
-            <Text size="B300">Remove</Text>
+      {uploadAtom ? (
+        <Box gap="200" direction="Column">
+          <CompactUploadCardRenderer
+            uploadAtom={uploadAtom}
+            onRemove={handleRemoveUpload}
+            onComplete={handleUploaded}
+          />
+        </Box>
+      ) : (
+        <Box gap="200">
+          <Button
+            onClick={() => pickFile('image/*')}
+            size="300"
+            variant="Secondary"
+            fill="Soft"
+            outlined
+            radii="300"
+            disabled={disableSetAvatar}
+          >
+            <Text size="B300">Upload</Text>
           </Button>
-        )}
+          {avatarUrl && (
+            <Button
+              size="300"
+              variant="Critical"
+              fill="None"
+              radii="300"
+              disabled={disableSetAvatar}
+              onClick={() => setAlertRemove(true)}
+            >
+              <Text size="B300">Remove</Text>
+            </Button>
+          )}
+        </Box>
+      )}
 
-        {imageFileURL && (
-          <Overlay open backdrop={<OverlayBackdrop />}>
-            <OverlayCenter>
-              <FocusTrap
-                focusTrapOptions={{
-                  initialFocus: false,
-                  onDeactivate: handleImageCropperClose,
-                  clickOutsideDeactivates: true,
-                  escapeDeactivates: stopPropagation,
+      {imageFileURL && (
+        <Overlay open={false} backdrop={<OverlayBackdrop />}>
+          <OverlayCenter>
+            <FocusTrap
+              focusTrapOptions={{
+                initialFocus: false,
+                onDeactivate: handleRemoveUpload,
+                clickOutsideDeactivates: true,
+                escapeDeactivates: stopPropagation,
+              }}
+            >
+              <Modal className={ModalWide} variant="Surface" size="500">
+                <ImageEditor
+                  name={imageFile?.name ?? 'Unnamed'}
+                  url={imageFileURL}
+                  requestClose={handleRemoveUpload}
+                />
+              </Modal>
+            </FocusTrap>
+          </OverlayCenter>
+        </Overlay>
+      )}
+
+      <Overlay open={alertRemove} backdrop={<OverlayBackdrop />}>
+        <OverlayCenter>
+          <FocusTrap
+            focusTrapOptions={{
+              initialFocus: false,
+              onDeactivate: () => setAlertRemove(false),
+              clickOutsideDeactivates: true,
+              escapeDeactivates: stopPropagation,
+            }}
+          >
+            <Dialog variant="Surface">
+              <Header
+                style={{
+                  padding: `0 ${config.space.S200} 0 ${config.space.S400}`,
+                  borderBottomWidth: config.borderWidth.B300,
                 }}
+                variant="Surface"
+                size="500"
               >
-                <Modal className={ModalWide} variant="Surface" size="500">
-                  <ImageEditor
-                    name={imageFile?.name ?? 'Unnamed'}
-                    url={imageFileURL}
-                    requestClose={handleImageCropperClose}
-                  />
-                </Modal>
-              </FocusTrap>
-            </OverlayCenter>
-          </Overlay>
-        )}
-      </Box>
+                <Box grow="Yes">
+                  <Text size="H4">Remove Avatar</Text>
+                </Box>
+                <IconButton size="300" onClick={() => setAlertRemove(false)} radii="300">
+                  <Icon src={Icons.Cross} />
+                </IconButton>
+              </Header>
+              <Box style={{ padding: config.space.S400 }} direction="Column" gap="400">
+                <Box direction="Column" gap="200">
+                  <Text priority="400">Are you sure you want to remove profile avatar?</Text>
+                </Box>
+                <Button variant="Critical" onClick={handleRemoveAvatar}>
+                  <Text size="B400">Remove</Text>
+                </Button>
+              </Box>
+            </Dialog>
+          </FocusTrap>
+        </OverlayCenter>
+      </Overlay>
     </SettingTile>
   );
 }
