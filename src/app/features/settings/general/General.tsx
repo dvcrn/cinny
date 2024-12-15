@@ -25,13 +25,13 @@ import {
 } from 'folds';
 import { isKeyHotkey } from 'is-hotkey';
 import FocusTrap from 'focus-trap-react';
-import { Page, PageContent, PageHeader } from '../../components/page';
-import { SequenceCard } from '../../components/sequence-card';
-import { useSetting } from '../../state/hooks/settings';
-import { MessageLayout, MessageSpacing, settingsAtom } from '../../state/settings';
-import { SettingTile } from '../../components/setting-tile';
-import { KeySymbol } from '../../utils/key-symbol';
-import { isMacOS } from '../../utils/user-agent';
+import { Page, PageContent, PageHeader } from '../../../components/page';
+import { SequenceCard } from '../../../components/sequence-card';
+import { useSetting } from '../../../state/hooks/settings';
+import { MessageLayout, MessageSpacing, settingsAtom } from '../../../state/settings';
+import { SettingTile } from '../../../components/setting-tile';
+import { KeySymbol } from '../../../utils/key-symbol';
+import { isMacOS } from '../../../utils/user-agent';
 import {
   DarkTheme,
   LightTheme,
@@ -40,11 +40,11 @@ import {
   useSystemThemeKind,
   useThemeNames,
   useThemes,
-} from '../../hooks/useTheme';
-import { stopPropagation } from '../../utils/keyboard';
-import { useMessageLayoutItems } from '../../hooks/useMessageLayout';
-import { useMessageSpacingItems } from '../../hooks/useMessageSpacing';
-import { SequenceCardStyle } from './styles.css';
+} from '../../../hooks/useTheme';
+import { stopPropagation } from '../../../utils/keyboard';
+import { useMessageLayoutItems } from '../../../hooks/useMessageLayout';
+import { useMessageSpacingItems } from '../../../hooks/useMessageSpacing';
+import { SequenceCardStyle } from '../styles.css';
 
 type ThemeSelectorProps = {
   themeNames: Record<string, string>;

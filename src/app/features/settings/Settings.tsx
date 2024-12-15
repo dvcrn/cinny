@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { Avatar, Box, config, Icon, IconButton, Icons, IconSrc, MenuItem, Text } from 'folds';
-import { General } from './General';
+import { General } from './general';
 import { PageNav, PageNavContent, PageNavHeader, PageRoot } from '../../components/page';
 import { ScreenSize, useScreenSizeContext } from '../../hooks/useScreenSize';
-import { Account } from './Account';
+import { Account } from './account';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { useMatrixClient } from '../../hooks/useMatrixClient';
 import { getMxIdLocalPart, mxcUrlToHttp } from '../../utils/matrix';

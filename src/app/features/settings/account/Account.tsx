@@ -27,26 +27,26 @@ import {
   Spinner,
 } from 'folds';
 import FocusTrap from 'focus-trap-react';
-import { Page, PageContent, PageHeader } from '../../components/page';
-import { SequenceCard } from '../../components/sequence-card';
-import { SequenceCardStyle } from './styles.css';
-import { SettingTile } from '../../components/setting-tile';
-import { useMatrixClient } from '../../hooks/useMatrixClient';
-import { UserProfile, useUserProfile } from '../../hooks/useUserProfile';
-import { getMxIdLocalPart, mxcUrlToHttp } from '../../utils/matrix';
-import { UserAvatar } from '../../components/user-avatar';
-import { useMediaAuthentication } from '../../hooks/useMediaAuthentication';
-import { nameInitials } from '../../utils/common';
-import { copyToClipboard } from '../../utils/dom';
-import { AsyncStatus, useAsyncCallback } from '../../hooks/useAsyncCallback';
-import { useFilePicker } from '../../hooks/useFilePicker';
-import { useObjectURL } from '../../hooks/useObjectURL';
-import { stopPropagation } from '../../utils/keyboard';
-import { ImageEditor } from '../../components/image-editor';
-import { ModalWide } from '../../styles/Modal.css';
-import { createUploadAtom, UploadSuccess } from '../../state/upload';
-import { CompactUploadCardRenderer } from '../../components/upload-card';
-import { useCapabilities } from '../../hooks/useCapabilities';
+import { Page, PageContent, PageHeader } from '../../../components/page';
+import { SequenceCard } from '../../../components/sequence-card';
+import { SequenceCardStyle } from '../styles.css';
+import { SettingTile } from '../../../components/setting-tile';
+import { useMatrixClient } from '../../../hooks/useMatrixClient';
+import { UserProfile, useUserProfile } from '../../../hooks/useUserProfile';
+import { getMxIdLocalPart, mxcUrlToHttp } from '../../../utils/matrix';
+import { UserAvatar } from '../../../components/user-avatar';
+import { useMediaAuthentication } from '../../../hooks/useMediaAuthentication';
+import { nameInitials } from '../../../utils/common';
+import { copyToClipboard } from '../../../utils/dom';
+import { AsyncStatus, useAsyncCallback } from '../../../hooks/useAsyncCallback';
+import { useFilePicker } from '../../../hooks/useFilePicker';
+import { useObjectURL } from '../../../hooks/useObjectURL';
+import { stopPropagation } from '../../../utils/keyboard';
+import { ImageEditor } from '../../../components/image-editor';
+import { ModalWide } from '../../../styles/Modal.css';
+import { createUploadAtom, UploadSuccess } from '../../../state/upload';
+import { CompactUploadCardRenderer } from '../../../components/upload-card';
+import { useCapabilities } from '../../../hooks/useCapabilities';
 
 function MatrixId() {
   const mx = useMatrixClient();
