@@ -77,9 +77,10 @@ const useSettingsMenuItems = (): SettingsMenuItem[] =>
   );
 
 type SettingsProps = {
+  initialPage?: SettingsPages;
   requestClose: () => void;
 };
-export function Settings({ requestClose }: SettingsProps) {
+export function Settings({ initialPage, requestClose }: SettingsProps) {
   const mx = useMatrixClient();
   const useAuthentication = useMediaAuthentication();
   const userId = mx.getUserId()!;
@@ -90,9 +91,10 @@ export function Settings({ requestClose }: SettingsProps) {
     : undefined;
 
   const screenSize = useScreenSizeContext();
-  const [activePage, setActivePage] = useState<SettingsPages | undefined>(
-    screenSize === ScreenSize.Mobile ? undefined : SettingsPages.GeneralPage
-  );
+  const [activePage, setActivePage] = useState<SettingsPages | undefined>(() => {
+    if (initialPage) return initialPage;
+    return screenSize === ScreenSize.Mobile ? undefined : SettingsPages.GeneralPage;
+  });
   const menuItems = useSettingsMenuItems();
 
   const handlePageRequestClose = () => {
