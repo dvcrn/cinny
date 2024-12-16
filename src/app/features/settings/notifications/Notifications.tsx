@@ -7,6 +7,7 @@ import { SettingTile } from '../../../components/setting-tile';
 import { useSetting } from '../../../state/hooks/settings';
 import { settingsAtom } from '../../../state/settings';
 import { usePermissionState } from '../../../hooks/usePermission';
+import { AllMessagesNotifications } from './AllMessages';
 
 function SystemNotification() {
   const notifPermission = usePermissionState(
@@ -100,6 +101,7 @@ export function Notifications({ requestClose }: NotificationsProps) {
           <PageContent>
             <Box direction="Column" gap="700">
               <SystemNotification />
+              <AllMessagesNotifications />
             </Box>
           </PageContent>
         </Scroll>
