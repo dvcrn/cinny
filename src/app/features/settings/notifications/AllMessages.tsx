@@ -50,13 +50,14 @@ type PushRulesProps = {
   encrypted?: boolean;
   oneToOne?: boolean;
 };
-function AllMessagesModeSwitcher({ ruleId, pushRules, encrypted, oneToOne }: PushRulesProps) {
+function AllMessagesModeSwitcher({
+  ruleId,
+  pushRules,
+  encrypted = false,
+  oneToOne = false,
+}: PushRulesProps) {
   const mx = useMatrixClient();
-  const defaultPushRuleData = getAllMessageDefaultRule(
-    ruleId,
-    encrypted ?? false,
-    oneToOne ?? false
-  );
+  const defaultPushRuleData = getAllMessageDefaultRule(ruleId, encrypted, oneToOne);
   const { kind, pushRule } = usePushRule(pushRules, ruleId) ?? defaultPushRuleData;
   const getModeActions = useNotificationModeActions();
 
@@ -83,7 +84,7 @@ export function AllMessagesNotifications() {
       <Box alignItems="Center" justifyContent="SpaceBetween" gap="200">
         <Text size="L400">All Messages</Text>
         <Box gap="100">
-          <Text size="T200">Hint: </Text>
+          <Text size="T200">Badge: </Text>
           <Badge radii="300" variant="Secondary" fill="Solid">
             <Text size="L400">1</Text>
           </Badge>

@@ -7,7 +7,7 @@ export enum NotificationMode {
   NotifyLoud = 'NotifyLoud',
 }
 
-type NotificationModeOptions = {
+export type NotificationModeOptions = {
   soundValue?: string;
   highlight?: boolean;
 };

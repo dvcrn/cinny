@@ -1,10 +1,37 @@
-import { IPushRule, IPushRules, PushRuleKind, RuleId } from 'matrix-js-sdk';
+import {
+  IPushRule,
+  IPushRules,
+  PushRuleAction,
+  PushRuleCondition,
+  PushRuleKind,
+  RuleId,
+} from 'matrix-js-sdk';
 import { useMemo } from 'react';
 
 export type PushRuleData = {
   kind: PushRuleKind;
   pushRule: IPushRule;
 };
+
+export const makePushRuleData = (
+  kind: PushRuleKind,
+  ruleId: RuleId,
+  actions: PushRuleAction[],
+  conditions?: PushRuleCondition[],
+  pattern?: string,
+  enabled?: boolean,
+  _default?: boolean
+): PushRuleData => ({
+  kind,
+  pushRule: {
+    rule_id: ruleId,
+    default: _default ?? true,
+    enabled: enabled ?? true,
+    pattern,
+    conditions,
+    actions,
+  },
+});
 
 export const orderedPushRuleKinds: PushRuleKind[] = [
   PushRuleKind.Override,
