@@ -9,6 +9,7 @@ import { settingsAtom } from '../../../state/settings';
 import { usePermissionState } from '../../../hooks/usePermission';
 import { AllMessagesNotifications } from './AllMessages';
 import { SpecialMessagesNotifications } from './SpecialMessages';
+import { KeywordMessagesNotifications } from './KeywordMessages';
 
 function SystemNotification() {
   const notifPermission = usePermissionState(
@@ -104,6 +105,7 @@ export function Notifications({ requestClose }: NotificationsProps) {
               <SystemNotification />
               <AllMessagesNotifications />
               <SpecialMessagesNotifications />
+              <KeywordMessagesNotifications />
             </Box>
           </PageContent>
         </Scroll>
