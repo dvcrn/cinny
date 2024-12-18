@@ -12,7 +12,7 @@ import {
   OverlayCenter,
   Modal,
   Chip,
-  config,
+  Button,
 } from 'folds';
 import { MatrixEvent } from 'matrix-js-sdk';
 import FocusTrap from 'focus-trap-react';
@@ -29,6 +29,7 @@ import { stopPropagation } from '../../../utils/keyboard';
 
 function AccountData() {
   const mx = useMatrixClient();
+  const [view, setView] = useState(false);
   const [accountData, setAccountData] = useState(() => Array.from(mx.store.accountData.values()));
   const [selectedEvent, selectEvent] = useState<MatrixEvent>();
 
@@ -60,28 +61,49 @@ function AccountData() {
         direction="Column"
         gap="400"
       >
-        <SettingTile title="Global" description="Data stored in your global account data.">
-          <Box style={{ paddingTop: config.space.S200 }} direction="Column" gap="200">
-            <Text size="L400">Types</Text>
-            <Box gap="200" wrap="Wrap">
-              {accountData.map((mEvent) => (
-                <Chip
-                  key={mEvent.getType()}
-                  variant="Secondary"
-                  fill="Soft"
-                  radii="Pill"
-                  outlined
-                  onClick={handleView}
-                  data-event-type={mEvent.getType()}
-                >
-                  <Text size="T200" truncate>
-                    {mEvent.getType()}
-                  </Text>
-                </Chip>
-              ))}
+        <SettingTile
+          title="Global"
+          description="Data stored in your global account data."
+          after={
+            <Button
+              onClick={() => setView(!view)}
+              variant="Secondary"
+              fill="Soft"
+              size="300"
+              radii="300"
+              outlined
+              before={
+                <Icon src={view ? Icons.ChevronTop : Icons.ChevronBottom} size="100" filled />
+              }
+            >
+              <Text size="B300">{view ? 'Collapse' : 'Expand'}</Text>
+            </Button>
+          }
+        />
+        {view && (
+          <SettingTile>
+            <Box direction="Column" gap="200">
+              <Text size="L400">Types</Text>
+              <Box gap="200" wrap="Wrap">
+                {accountData.map((mEvent) => (
+                  <Chip
+                    key={mEvent.getType()}
+                    variant="Secondary"
+                    fill="Soft"
+                    radii="Pill"
+                    outlined
+                    onClick={handleView}
+                    data-event-type={mEvent.getType()}
+                  >
+                    <Text size="T200" truncate>
+                      {mEvent.getType()}
+                    </Text>
+                  </Chip>
+                ))}
+              </Box>
             </Box>
-          </Box>
-        </SettingTile>
+          </SettingTile>
+        )}
       </SequenceCard>
       {selectedEvent && (
         <Overlay open backdrop={<OverlayBackdrop />}>
