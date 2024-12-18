@@ -139,7 +139,7 @@ export function IgnoredUserList() {
   return (
     <Box direction="Column" gap="100">
       <Box alignItems="Center" justifyContent="SpaceBetween" gap="200">
-        <Text size="L400">Blocked Users</Text>
+        <Text size="L400">Block Messages</Text>
       </Box>
       <SequenceCard
         className={SequenceCardStyle}
@@ -147,12 +147,15 @@ export function IgnoredUserList() {
         direction="Column"
         gap="400"
       >
-        <SettingTile title="Block User" description="Prevent receiving message by blocking userId.">
+        <SettingTile
+          title="Select User"
+          description="Prevent receiving message by adding userId into blocklist."
+        >
           <Box direction="Column" gap="300">
             <IgnoreUserInput userList={ignoredUsers} />
             {ignoredUsers.length > 0 && (
               <Box direction="Inherit" gap="100">
-                <Text size="L400">Blocked</Text>
+                <Text size="L400">Blocklist</Text>
                 <Box wrap="Wrap" gap="200">
                   {ignoredUsers.map((userId) => (
                     <IgnoredUserChip key={userId} userId={userId} userList={ignoredUsers} />
