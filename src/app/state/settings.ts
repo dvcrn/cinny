@@ -32,6 +32,8 @@ export interface Settings {
 
   showNotifications: boolean;
   isNotificationSounds: boolean;
+
+  developerTools: boolean;
 }
 
 const defaultSettings: Settings = {
@@ -58,6 +60,8 @@ const defaultSettings: Settings = {
 
   showNotifications: true,
   isNotificationSounds: true,
+
+  developerTools: false,
 };
 
 export const getSettings = () => {
