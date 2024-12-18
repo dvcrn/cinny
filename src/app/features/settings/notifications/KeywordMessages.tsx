@@ -39,8 +39,8 @@ function KeywordInput() {
   const addingKeyword = keywordState.status === AsyncStatus.Loading;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (evt) => {
-    const name = evt.currentTarget.value;
-    setKeyword(name);
+    const k = evt.currentTarget.value;
+    setKeyword(k);
   };
 
   const handleReset = () => {
@@ -89,14 +89,14 @@ function KeywordInput() {
       </Box>
       <Button
         size="400"
-        variant="Primary"
+        variant="Secondary"
         fill="Soft"
         outlined
         radii="300"
         type="submit"
         disabled={addingKeyword}
       >
-        {addingKeyword && <Spinner variant="Primary" size="300" />}
+        {addingKeyword && <Spinner variant="Secondary" size="300" />}
         <Text size="B400">Save</Text>
       </Button>
     </Box>
@@ -179,7 +179,7 @@ export function KeywordMessagesNotifications() {
         gap="400"
       >
         <SettingTile
-          title="Contain Keyword"
+          title="Select Keyword"
           description="Set a notification preference for message containing given keyword."
         >
           <KeywordInput />

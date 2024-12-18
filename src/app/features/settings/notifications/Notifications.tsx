@@ -10,6 +10,7 @@ import { usePermissionState } from '../../../hooks/usePermission';
 import { AllMessagesNotifications } from './AllMessages';
 import { SpecialMessagesNotifications } from './SpecialMessages';
 import { KeywordMessagesNotifications } from './KeywordMessages';
+import { IgnoredUserList } from './IgnoredUserList';
 
 function SystemNotification() {
   const notifPermission = usePermissionState(
@@ -106,6 +107,7 @@ export function Notifications({ requestClose }: NotificationsProps) {
               <AllMessagesNotifications />
               <SpecialMessagesNotifications />
               <KeywordMessagesNotifications />
+              <IgnoredUserList />
             </Box>
           </PageContent>
         </Scroll>
