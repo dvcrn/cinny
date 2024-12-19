@@ -214,11 +214,11 @@ export const useSpaceJoinedHierarchy = (
 
   const sortRoomItems = useCallback(
     (sId: string, items: HierarchyItem[]) => {
-      if (sortByActivity(sId)) {
+      // if (sortByActivity(sId)) {
         items.sort((a, b) => factoryRoomIdByActivity(mx)(a.roomId, b.roomId));
         return items;
-      }
-      items.sort(hierarchyItemTs).sort(hierarchyItemByOrder);
+      // }
+      // items.sort(hierarchyItemTs).sort(hierarchyItemByOrder);
       return items;
     },
     [mx, sortByActivity]
