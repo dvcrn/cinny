@@ -135,7 +135,7 @@ export function AuthLayout() {
           <Header className={css.AuthHeader} size="600" variant="Surface">
             <Box grow="Yes" direction="Row" gap="300" alignItems="Center">
               <img className={css.AuthLogo} src={CinnySVG} alt="Cinny Logo" />
-              <Text size="H3">Cinny</Text>
+              <Text size="H3">Cinny (David's edit)</Text>
             </Box>
           </Header>
           <Box className={css.AuthCardContent} direction="Column">
