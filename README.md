@@ -8,6 +8,7 @@ It
 - Changes the default sorting across all spaces and "Home" to be by most recent activity 
     - Closing a section will still show the unread-only messages, sorted by most recent activity
 
+Hosted version available at https://cinny.d.pn
 
 ## Install
 
