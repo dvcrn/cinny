@@ -1,0 +1,36 @@
+{
+    "routes": [
+        {
+            "src": "/config\\.json",
+            "dest": "/config.json"
+        },
+        {
+            "src": "/manifest\\.json",
+            "dest": "/manifest.json"
+        },
+        {
+            "src": "/sw\\.js",
+            "dest": "/sw.js"
+        },
+        {
+            "src": ".*/olm\\.wasm",
+            "dest": "/olm.wasm"
+        },
+        {
+            "src": "/pdf\\.worker\\.min\\.js",
+            "dest": "/pdf.worker.min.js"
+        },
+        {
+            "src": "/public/(.*)",
+            "dest": "/public/$1"
+        },
+        {
+            "src": "/assets/(.*)",
+            "dest": "/assets/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ]
+}
